@@ -55,11 +55,14 @@ def handleFile(file_path):
                     data_city = row[start_zip_col - 3 ].value.lower()
                 output = sheet.cell(row = row[0].row, column=start_zip_col + 1)
                 if api_city and api_city == data_city:
-                    output.value = "True"
+                    pass
                 elif api_city:
-                    output.value = "False"
                     output = sheet.cell(row = row[0].row, column=start_zip_col + 2)
                     output.value = api_city
+                else:
+                    output.value = "Invalid Zip"
+
+
 
     with tempfile.NamedTemporaryFile(delete=False) as tmp:
         workbook.save(tmp.name)
