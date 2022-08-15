@@ -51,7 +51,7 @@ def handleFile(file_path):
                     pass
                 elif api_city:
                     output = sheet.cell(row = row[0].row, column=start_zip_col + 2)
-                    output.value = api_city
+                    output.value = api_city.title()
                 else:
                     output.value = "Invalid Zip"
 
