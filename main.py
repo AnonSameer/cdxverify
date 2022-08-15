@@ -6,9 +6,7 @@ from urllib3.exceptions import InsecureRequestWarning
 from io import BytesIO
 import tempfile
 
-
-
-output = BytesIO()
+st.title("Verify Zip Codes")
 
 KEY = st.text_input('Enter CDX API Key', '')
 st.write("API key is " + KEY)
@@ -20,7 +18,6 @@ uploaded_file = st.file_uploader("Upload .xlsx file here", type="xlsx", accept_m
 def find_zip_col(worksheet):
     for row_cells in worksheet.iter_rows():
             for cell in row_cells:
-                #print(cell.value)
                 if cell: cell_str = str(cell.value)
                 if cell_str and str(cell_str.split("-")[0]).isnumeric() and (len(cell_str) == 5 or len(cell_str) == 10):
                     return int(cell.column)
@@ -32,18 +29,14 @@ def is_zipcode(zipcode):
     return cell_str and str(cell_str.split("-")[0]).isnumeric() and (len(cell_str) == 5 or len(cell_str) == 10)
 
 
-
 @st.experimental_memo
 def handleFile(file_path):
     workbook = load_workbook(file_path, data_only=True)
     
     for sheet in workbook.worksheets:
         start_zip_col = find_zip_col(sheet)
-        row_count = sheet.max_row
-        #print(start_zip_col)
         
         for row in sheet.iter_rows():
-            #print()
             if row[start_zip_col -1 ].value and is_zipcode(row[start_zip_col -1 ].value):
                 zipcode = int(str(row[start_zip_col -1 ].value).split("-")[0])
                 URL = f"""https://geodata.cdxtech.com/api/geogeneral?key={KEY}&zipcode={zipcode}&format=json"""
@@ -62,16 +55,12 @@ def handleFile(file_path):
                 else:
                     output.value = "Invalid Zip"
 
-
-
     with tempfile.NamedTemporaryFile(delete=False) as tmp:
         workbook.save(tmp.name)
         data = BytesIO(tmp.read())
         tmp.flush()
         tmp.close()
     return data
-
-
 
 
 if uploaded_file is not None:
