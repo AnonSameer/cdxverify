@@ -5,10 +5,7 @@ import requests
 from urllib3.exceptions import InsecureRequestWarning
 from io import BytesIO
 import tempfile
-import base64
-import pickle
-import uuid
-import re
+
 
 
 output = BytesIO()
